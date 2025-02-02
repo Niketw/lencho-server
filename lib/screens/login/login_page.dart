@@ -9,55 +9,73 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+/// Custom Painter that draws a bush as a combination of overlapping ellipses.
 class BushCloudPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    // Create multiple layers of bushes with slightly different colors
+    _drawBushLayer(canvas, size, const Color(0xfface268), 0.8); // Back layer, slightly lighter
+    _drawBushLayer(canvas, size, const Color(0xfface268), 0.9); // Middle layer
+    _drawBushLayer(canvas, size, const Color(0xfface268), 1.0); // Front layer, slightly darker
+  }
+
+  void _drawBushLayer(Canvas canvas, Size size, Color color, double scale) {
     final Paint paint = Paint()
-      ..color = const Color(0xFF90C789)  // Light green color
+      ..color = color
       ..style = PaintingStyle.fill;
 
-    // Create the main bush shape
-    final Path bushPath = Path();
-    
-    // Start from the left edge
-    bushPath.moveTo(0, size.height);
-    
-    // Left bump
-    bushPath.quadraticBezierTo(
-      size.width * 0.25,  // Control point X
-      size.height * 0.2,  // Control point Y - higher up for more rounded top
-      size.width * 0.5,   // End point X - middle of the screen
-      size.height * 0.5,  // End point Y - creates the dip
-    );
-    
-    // Right bump
-    bushPath.quadraticBezierTo(
-      size.width * 0.75,  // Control point X
-      size.height * 0.2,  // Control point Y - matches left bump
-      size.width,         // End point X - right edge
-      size.height,        // End point Y - bottom right corner
-    );
-    
-    // Close the path
-    bushPath.lineTo(size.width, size.height);
-    bushPath.lineTo(0, size.height);
-    bushPath.close();
+    // Create multiple overlapping bush shapes
+    for (int i = 0; i < 5; i++) {
+      final Path bushPath = Path();
+      
+      // Randomize the starting point slightly for each bush
+      double startX = size.width * (0.2 * i);
+      double width = size.width * 0.4; // Each bush covers 40% of the width
+      
+      bushPath.moveTo(startX, size.height);
+      
+      // Create the bush shape with multiple curves
+      bushPath.quadraticBezierTo(
+        startX + (width * 0.2),
+        size.height * (0.3 + (0.1 * (i % 2))), // Vary the height
+        startX + (width * 0.4),
+        size.height * (0.4 + (0.05 * (i % 3)))
+      );
+      
+      bushPath.quadraticBezierTo(
+        startX + (width * 0.6),
+        size.height * (0.2 + (0.1 * ((i + 1) % 2))),
+        startX + (width * 0.8),
+        size.height * (0.5 + (0.05 * ((i + 1) % 3)))
+      );
+      
+      bushPath.quadraticBezierTo(
+        startX + width,
+        size.height * 0.7,
+        startX + width,
+        size.height
+      );
+      
+      // Close the path
+      bushPath.lineTo(startX + width, size.height);
+      bushPath.lineTo(startX, size.height);
+      bushPath.close();
 
-    // Draw the main shape
-    canvas.drawPath(bushPath, paint);
+      // Add subtle gradient for depth
+      final Paint gradientPaint = Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            color.withOpacity(0.2),
+            color.withOpacity(0.1),
+          ],
+        ).createShader(Rect.fromLTWH(startX, 0, width, size.height));
 
-    // Add subtle gradient overlay for depth
-    final Paint gradientPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xFF90C789).withOpacity(0.2),
-          const Color(0xFF90C789).withOpacity(0),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-
-    canvas.drawPath(bushPath, gradientPaint);
+      // Draw the bush
+      canvas.drawPath(bushPath, paint);
+      canvas.drawPath(bushPath, gradientPaint);
+    }
   }
 
   @override
