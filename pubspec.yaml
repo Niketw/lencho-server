@@ -89,3 +89,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+  assets:
+    - assets/logo.png
+    - assets/green-bush.png
+    - assets/flower-1.png
+    - assets/flower-2.png
