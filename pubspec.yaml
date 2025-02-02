@@ -94,5 +94,4 @@ flutter:
   assets:
     - assets/logo.png
     - assets/green-bush.png
-    - assets/flower-1.png
-    - assets/flower-2.png
+    - assets/flower.png
