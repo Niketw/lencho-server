@@ -9,11 +9,35 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+/// Custom clipper to create a smooth, curvy top edge for the bush.
+class BushClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final Path path = Path();
+    // Start at bottom left.
+    path.moveTo(0, size.height);
+    // Draw a line up to create a starting point for the curve.
+    path.lineTo(0, 40);
+    // Create a quadratic bezier curve from the top left to the top right.
+    path.quadraticBezierTo(
+      size.width / 2, 0, // control point: adjust this for a smoother curve
+      size.width, 40,    // end point
+    );
+    // Draw line down to bottom right.
+    path.lineTo(size.width, size.height);
+    // Close the path.
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool _showLogin = false;
 
   void _onGetStarted() {
-    // Trigger animations and reveal the login form.
     setState(() {
       _showLogin = true;
     });
@@ -22,21 +46,47 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     return Scaffold(
+      backgroundColor: const Color(0xffffe98a),
       body: Stack(
         children: [
-          // ------------------------
-          // 1. Top Section: Logo and Company Name
-          // ------------------------
+          // -------------------------------------------------
+          // 1. Bottom: Green Bush Image with smooth curvy top
+          //    (Drawn first so that other elements are layered on top.)
+          // -------------------------------------------------
           Positioned(
-            top: 40,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedContainer(
+              duration: const Duration(seconds: 2),
+              curve: Curves.easeInOut,
+              height: _showLogin
+                  ? screenHeight * 0.65  // 50% + 15%
+                  : screenHeight * 0.35, // 20% + 15%
+              child: ClipPath(
+                clipper: BushClipper(),
+                child: Image.asset(
+                  'assets/green-bush.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+
+          // -------------------------------------------------
+          // 2. Top Section: Logo and Company Name
+          //    (Now positioned 10% down from the top.)
+          // -------------------------------------------------
+          Positioned(
+            top: screenHeight * 0.1, // 10% down from the top
             left: 0,
             right: 0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Animate logo size on transition.
+                // Animated logo size on transition.
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
@@ -48,13 +98,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Animate text style (size) on transition.
+                // Animated "Lencho Inc." text with bold style and new color.
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 500),
                   style: TextStyle(
                     fontSize: _showLogin ? 20 : 26,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: const Color(0xff0d522c),
                   ),
                   child: const Text("Lencho Inc."),
                 ),
@@ -62,27 +112,29 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             ),
           ),
 
-          // ------------------------
-          // 2. Center: Get Started Button (only when login form is hidden)
-          // ------------------------
+          // -------------------------------------------------
+          // 3. Center: Get Started Button (only when login form is hidden)
+          // -------------------------------------------------
           if (!_showLogin)
             Center(
               child: ElevatedButton(
                 onPressed: _onGetStarted,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 ),
                 child: const Text("Get Started"),
               ),
             ),
 
-          // ------------------------
-          // 3. Login Form: Appears over the bush once _showLogin is true.
-          // Adjust the Positioned top value as needed.
-          // ------------------------
+          // -------------------------------------------------
+          // 4. Login Form: Appears over the bush once _showLogin is true.
+          //     The container background remains transparent.
+          //     (Positioned at 40% of the screen height.)
+          // -------------------------------------------------
           if (_showLogin)
             Positioned(
-              top: screenHeight * 0.3, // adjust this value to position the form vertically
+              top: screenHeight * 0.40,
               left: 20,
               right: 20,
               child: AnimatedOpacity(
@@ -90,87 +142,101 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 duration: const Duration(milliseconds: 500),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          "Sign in to continue",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 14),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 14),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const HomePage(),
+                        // Header: "Login" and "Sign in to continue"
+                        Transform.translate(
+                          offset: Offset(0, -screenHeight * 0.05), // 5% higher
+                          child: Column(
+                            children: const [
+                              Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xff5d9c59),
                                 ),
-                              );
-                            },
-                            child: const Text(
-                              "Log In",
-                              style: TextStyle(fontSize: 16),
-                            ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Sign in to continue",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 16),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Forgot Password"),
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "www.reallygreatsite.com",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
+                        // Form Fields & Buttons: shifted 5% lower.
+                        Transform.translate(
+                          offset: Offset(0, screenHeight * 0.05), // 5% lower
+                          child: Column(
+                            children: [
+                              TextField(
+                                decoration: InputDecoration(
+                                  labelText: 'Name',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 14),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              TextField(
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Password',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 14),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const HomePage(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    "Log In",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton(
+                                onPressed: () {},
+                                child: const Text("Forgot Password"),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text(
+                                "www.reallygreatsite.com",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -179,26 +245,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
-          // ------------------------
-          // 4. Bottom: Green Bush Image (animated height)
-          // Initially covers the bottom 20% of the screen.
-          // When _showLogin is true, it rises (its height increases) to cover 50% of the screen.
-          // ------------------------
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: AnimatedContainer(
-              duration: const Duration(seconds: 2),
-              curve: Curves.easeInOut,
-              height: _showLogin ? screenHeight * 0.5 : screenHeight * 0.2,
-              child: Image.asset(
-                'assets/green-bush.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
         ],
       ),
     );
