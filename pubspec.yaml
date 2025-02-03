@@ -103,6 +103,10 @@ flutter:
 
 
   assets:
-    - assets/logo.png
-    - assets/green-bush.png
-    - assets/flower.png
+    - assets/images/logo.png
+    - assets/images/green-bush.png
+    - assets/images/flower.png
+
+
+    - assets/images/icon/google.png
+    - assets/images/icon/meta.png
