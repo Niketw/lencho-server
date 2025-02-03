@@ -4,25 +4,46 @@ import '../home/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-  
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+
 class BushCloudPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = const Color.fromARGB(255, 95, 188, 95)  // Light green color from screenshot
+      ..color = const Color(0xfface268) // Light green color from screenshot
       ..style = PaintingStyle.fill;
 
     // Define the ellipses
+
+    const height = 1.5;
     final List<Rect> ellipses = [
-      Rect.fromCenter(center: Offset(size.width * -0.05, size.height * 0.4), width: size.width * 0.3, height: size.height * 1.2),
-      Rect.fromCenter(center: Offset(size.width * 0.2, size.height * 0.3), width: size.width * 0.17, height: size.height * 0.25),
-      Rect.fromCenter(center: Offset(size.width * 0.35, size.height * 0.35), width: size.width * 0.14, height: size.height * 0.15),
-      Rect.fromCenter(center: Offset(size.width * 0.5, size.height * 0.3), width: size.width * 0.15, height: size.height * 0.35),
-      Rect.fromCenter(center: Offset(size.width * 0.7, size.height * 0.4), width: size.width * 0.2, height: size.height * 1.6),
-      Rect.fromCenter(center: Offset(size.width * 0.95, size.height * 0.5), width: size.width * 0.2, height: size.height * 0.4),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.07, size.height * (0.4 + height)),
+          width: size.width * 0.3,
+          height: size.height * 1.5),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.25, size.height * (0.5 + height)),
+          width: size.width * 0.25,
+          height: size.height * 0.9),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.4, size.height * (0.5 + height)),
+          width: size.width * 0.1,
+          height: size.height * 0.35),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.5, size.height * (0.38 + height)),
+          width: size.width * 0.15,
+          height: size.height * 0.35),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.7, size.height * (0.45 + height)),
+          width: size.width * 0.4,
+          height: size.height * 1.5),
+      Rect.fromCenter(
+          center: Offset(size.width * 0.95, size.height * (0.4 + height)),
+          width: size.width * 0.3,
+          height: size.height * 0.8),
     ];
 
     // Draw each ellipse
@@ -32,7 +53,8 @@ class BushCloudPainter extends CustomPainter {
 
     // Draw a rectangle to fill the bottom part
     canvas.drawRect(
-      Rect.fromLTWH(0, size.height * 0.5, size.width, size.height * 0.5),
+      Rect.fromLTWH(0, size.height * (0.5 + height), size.width,
+          size.height * (0.5 + height)),
       paint,
     );
   }
@@ -43,7 +65,7 @@ class BushCloudPainter extends CustomPainter {
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool _showLogin = false;
-  
+
   /// When the Get Started button is pressed, update the state so that the
   /// bush animates upward and the login form is shown.
   void _onGetStarted() {
@@ -51,11 +73,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       _showLogin = true;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     // Define the height for the bush container.
     const double bushHeight = 100;
     // When the login form is NOT shown, the bush is positioned slightly lower.
@@ -63,7 +85,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     // with the yellow/green partition (at screenHeight * 0.5).
     final double bushTopNotShown = screenHeight * 0.5 - bushHeight + 20;
     final double bushTopShown = screenHeight * 0.5 - bushHeight;
-    
+
     return Scaffold(
       body: Stack(
         children: [
@@ -73,12 +95,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             top: 0,
             left: 0,
             right: 0,
-            height: screenHeight * 0.5,
+            height: screenHeight * 0.7,
             child: Container(color: const Color.fromARGB(255, 255, 234, 138)),
           ),
           // Bottom half (greenish)
           Positioned(
-            top: screenHeight * 0.5,
+            top: screenHeight * 0.7,
             left: 0,
             right: 0,
             bottom: 0,
@@ -139,7 +161,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               child: ElevatedButton(
                 onPressed: _onGetStarted,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                 ),
                 child: const Text("Get Started"),
               ),
@@ -215,7 +238,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
