@@ -110,3 +110,6 @@ flutter:
 
     - assets/images/icon/google.png
     - assets/images/icon/meta.png
+
+    - assets/images/icon/back.png
+    - assets/images/icon/front.png

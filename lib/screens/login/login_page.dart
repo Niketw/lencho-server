@@ -1,105 +1,53 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import '../home/home_page.dart';
+import 'Register_Page.dart';
+import 'Forgot_Page.dart'; // Import the forgot password page
+import '../../widgets/BushCloudPainter.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-  
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-/// A custom painter to draw a bush-like cloud using ovals.
-class BushCloudPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = const Color(0xfface268)
-      ..style = PaintingStyle.fill;
-
-    // A constant to shift the vertical positions.
-    const heightShift = 2.0;
-    
-    // Draw several ovals to form an uneven bush.
-    final List<Rect> ellipses = [
-      Rect.fromCenter(
-        center: Offset(size.width * 0.07, size.height * (0.2 + heightShift)),
-        width: size.width * 0.3,
-        height: size.height * 1.5,
-      ),
-      Rect.fromCenter(
-        center: Offset(size.width * 0.25, size.height * (0.3 + heightShift)),
-        width: size.width * 0.25,
-        height: size.height * 0.9,
-      ),
-      Rect.fromCenter(
-        center: Offset(size.width * 0.4, size.height * (0.3 + heightShift)),
-        width: size.width * 0.1,
-        height: size.height * 0.35,
-      ),
-      Rect.fromCenter(
-        center: Offset(size.width * 0.5, size.height * (0.18 + heightShift)),
-        width: size.width * 0.15,
-        height: size.height * 0.35,
-      ),
-      Rect.fromCenter(
-        center: Offset(size.width * 0.7, size.height * (0.25 + heightShift)),
-        width: size.width * 0.4,
-        height: size.height * 1.5,
-      ),
-      Rect.fromCenter(
-        center: Offset(size.width * 0.95, size.height * (0.2 + heightShift)),
-        width: size.width * 0.3,
-        height: size.height * 0.8,
-      ),
-    ];
-
-    for (final ellipse in ellipses) {
-      canvas.drawOval(ellipse, paint);
-    }
-
-    // Draw a rectangle to fill the bottom part of the bush.
-    canvas.drawRect(
-      Rect.fromLTWH(
-        0,
-        size.height * (0.3 + heightShift),
-        size.width,
-        size.height * (0.7 + heightShift),
-      ),
-      paint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   bool _showLogin = false;
-  
-  /// Called when the "Get Started" button is pressed.
+
   void _onGetStarted() {
     setState(() {
       _showLogin = true;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
+    // 1) Obtain screen size
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth  = MediaQuery.of(context).size.width;
-    
-    // Define bush dimensions and positions for animation.
+
+    // 2) Define reusable "responsive" dimensions
+    final double verticalSpace    = screenHeight * 0.02;  // 2% of height
+    final double horizontalSpace  = screenWidth  * 0.05;  // 5% of width
+    final double fieldWidth       = screenWidth  * 0.85;  // 85% of width
+    final double buttonHeight     = screenHeight * 0.065; // ~6.5% of height
+    final double borderRadius     = screenHeight * 0.015; // for rounded corners
+    final double fontSizeNormal   = screenHeight * 0.02;  // 2% of height
+    final double fontSizeLarge    = screenHeight * 0.03;  // 3% of height
+    final double logoSizeBig      = screenWidth  * 0.4;   // 40% of width
+    final double logoSizeSmall    = screenWidth  * 0.25;  // 25% of width
+
+    // 3) Bush animation logic remains the same
     const double bushHeight = 100;
     final double bushTopNotShown = screenHeight * 0.5 - bushHeight + 20;
-    final double bushTopShown = screenHeight * 0.5 - bushHeight;
-    
+    final double bushTopShown    = screenHeight * 0.5 - bushHeight;
+
     return Scaffold(
-      // We do not set a scaffold background because our custom
-      // Positioned containers (yellow and green) will serve as the background.
+      // Prevent the layout from resizing when the keyboard appears.
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          // 1) Background: Top half (yellow)
+          // -- Background: Top (yellow) & Bottom (green) --
           Positioned(
             top: 0,
             left: 0,
@@ -107,7 +55,6 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             height: screenHeight * 0.7,
             child: Container(color: const Color(0xFFFFF4BE)),
           ),
-          // 2) Background: Bottom half (green)
           Positioned(
             top: screenHeight * 0.7,
             left: 0,
@@ -115,19 +62,20 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             bottom: 0,
             child: Container(color: const Color(0xFFACE268)),
           ),
-          // 3) Optional top menu dots (if needed)
+
+          // -- Optional top dots --
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(screenHeight * 0.02),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: List.generate(
                     3,
-                    (index) => Container(
-                      margin: const EdgeInsets.only(right: 4),
-                      width: 3,
-                      height: 3,
+                    (_) => Container(
+                      margin: EdgeInsets.only(right: screenWidth * 0.01),
+                      width: screenWidth * 0.008,
+                      height: screenWidth * 0.008,
                       decoration: const BoxDecoration(
                         color: Color(0xFF0D522C),
                         shape: BoxShape.circle,
@@ -138,10 +86,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 Row(
                   children: List.generate(
                     3,
-                    (index) => Container(
-                      margin: const EdgeInsets.only(right: 4),
-                      width: 3,
-                      height: 3,
+                    (_) => Container(
+                      margin: EdgeInsets.only(right: screenWidth * 0.01),
+                      width: screenWidth * 0.008,
+                      height: screenWidth * 0.008,
                       decoration: const BoxDecoration(
                         color: Color(0xFF0D522C),
                         shape: BoxShape.circle,
@@ -152,9 +100,10 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ],
             ),
           ),
-          // 4) Animated bush behind the form.
+
+          // -- Animated Bush using the BushCloudPainter --
           AnimatedPositioned(
-            duration: const Duration(seconds: 2),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeInOut,
             top: _showLogin ? bushTopShown : bushTopNotShown,
             left: 0,
@@ -163,12 +112,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               height: bushHeight,
               width: screenWidth,
               child: CustomPaint(
-                size: Size(screenWidth, bushHeight),
-                painter: BushCloudPainter(),
+                painter: BushCloudPainter(heightShift: 1.5),
               ),
             ),
           ),
-          // 5) Top Section (Logo & Company Name)
+
+          // -- Logo & Company Name --
           Positioned(
             top: screenHeight * 0.1,
             left: 0,
@@ -176,21 +125,23 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Animated logo size
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut,
-                  width: _showLogin ? 80 : 150,
-                  height: _showLogin ? 80 : 150,
+                  width: _showLogin ? logoSizeSmall : logoSizeBig,
+                  height: _showLogin ? logoSizeSmall : logoSizeBig,
                   child: Image.asset(
                     'assets/images/logo.png',
                     fit: BoxFit.contain,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: verticalSpace * 0.4),
+                // Animated text size
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 500),
                   style: TextStyle(
-                    fontSize: _showLogin ? 20 : 30,
+                    fontSize: _showLogin ? fontSizeNormal : fontSizeLarge,
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF0D522C),
                   ),
@@ -199,85 +150,123 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ],
             ),
           ),
-          // 6) "Get Started" button (only shown before login)
+
+          // -- "Get Started" button (visible before login) --
           if (!_showLogin)
             Center(
-              child: ElevatedButton(
-                onPressed: _onGetStarted,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 16,
+              child: SizedBox(
+                width: fieldWidth * 0.7, // e.g. 70% of fieldWidth
+                height: buttonHeight,
+                child: ElevatedButton(
+                  onPressed: _onGetStarted,
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: horizontalSpace,
+                      vertical: screenHeight * 0.015,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(borderRadius),
+                    ),
+                  ),
+                  child: Text(
+                    "Get Started",
+                    style: TextStyle(
+                      fontSize: fontSizeNormal,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                child: const Text("Get Started"),
               ),
             ),
-          // 7) Login Form (appears after Get Started is pressed)
+
+          // -- Login Form (centered vertically between text & flower) --
           if (_showLogin)
             Positioned(
+              // ~45% of screen height to visually center between "Lencho Inc." & bottom flower
               top: screenHeight * 0.30,
-              left: 20,
-              right: 20,
+              left: (screenWidth - fieldWidth) / 2,
+              right: (screenWidth - fieldWidth) / 2,
               child: AnimatedOpacity(
                 opacity: _showLogin ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 500),
                 child: Container(
-                  padding: const EdgeInsets.all(20),
-                  // Ensure the form container is transparent.
+                  padding: EdgeInsets.all(verticalSpace),
                   color: Colors.transparent,
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        // Simple login form fields.
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Name',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 16,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 16,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Forgot?',
-                              style: TextStyle(
-                                color: Color(0xFF0D522C),
-                                fontWeight: FontWeight.w600,
+                        // Name field
+                        SizedBox(
+                          width: fieldWidth,
+                          child: TextField(
+                            style: TextStyle(fontSize: fontSizeNormal),
+                            decoration: InputDecoration(
+                              hintText: 'Name',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(borderRadius),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: horizontalSpace,
+                                vertical: screenHeight * 0.015,
                               ),
                             ),
                           ),
                         ),
+                        SizedBox(height: verticalSpace),
+
+                        // Password field
                         SizedBox(
-                          width: double.infinity,
+                          width: fieldWidth,
+                          child: TextField(
+                            obscureText: true,
+                            style: TextStyle(fontSize: fontSizeNormal),
+                            decoration: InputDecoration(
+                              hintText: 'Password',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(borderRadius),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: horizontalSpace,
+                                vertical: screenHeight * 0.015,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Forgot link that redirects to the Forgot Password page
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ForgotPasswordPage(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Forgot?',
+                              style: TextStyle(
+                                color: const Color(0xFF0D522C),
+                                fontWeight: FontWeight.w600,
+                                fontSize: fontSizeNormal,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // Log In button
+                        SizedBox(
+                          width: fieldWidth,
+                          height: buttonHeight,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.pushReplacement(
@@ -290,98 +279,118 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: const Color(0xFF0D522C),
-                              padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(borderRadius),
                               ),
                               elevation: 0,
                             ),
-                            child: const Text(
+                            child: Text(
                               'Log In',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: fontSizeNormal,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
+
+                        // Or divider
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: verticalSpace),
                           child: Row(
                             children: [
-                              Expanded(child: Divider(color: Colors.black54)),
+                              const Expanded(child: Divider(color: Colors.black54)),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * 0.03,
+                                ),
                                 child: Text(
                                   'Or',
-                                  style: TextStyle(color: Colors.black54),
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: fontSizeNormal,
+                                  ),
                                 ),
                               ),
-                              Expanded(child: Divider(color: Colors.black54)),
+                              const Expanded(child: Divider(color: Colors.black54)),
                             ],
                           ),
                         ),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+
+                        // Register button
+                        SizedBox(
+                          width: fieldWidth,
+                          height: buttonHeight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RegisterPage(),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF0D522C),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(borderRadius),
                               ),
+                              elevation: 0,
                             ),
-                            child: const Text(
+                            child: Text(
                               'Register',
                               style: TextStyle(
-                                color: Color(0xFF0D522C),
-                                fontSize: 16,
+                                fontSize: fontSizeNormal,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+
+                        // Social login buttons
+                        SizedBox(height: verticalSpace),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              width: screenWidth * 0.12,
+                              height: screenWidth * 0.12,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
-                              child: Image.asset(
-                                'assets/images/icon/google.png',
-                                width: 24,
-                                height: 24,
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Image.asset(
+                                  'assets/images/icon/google.png',
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            SizedBox(width: screenWidth * 0.06),
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              width: screenWidth * 0.12,
+                              height: screenWidth * 0.12,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
-                              child: Image.asset(
-                                'assets/images/icon/meta.png',
-                                width: 24,
-                                height: 24,
+                              child: Padding(
+                                padding: EdgeInsets.all(screenWidth * 0.03),
+                                child: Image.asset(
+                                  'assets/images/icon/meta.png',
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        const Text(
+
+                        SizedBox(height: verticalSpace),
+                        Text(
                           'www.lencho.com',
                           style: TextStyle(
                             color: Colors.black54,
-                            fontSize: 14,
+                            fontSize: fontSizeNormal * 0.9,
                           ),
                         ),
                       ],
@@ -390,13 +399,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                 ),
               ),
             ),
-          // 8) Flower pinned at the bottom using Align.
+
+          // -- Flower pinned at bottom (fixed, even if keyboard opens) --
           Align(
             alignment: Alignment.bottomCenter,
             child: Image.asset(
               'assets/images/flower.png',
               fit: BoxFit.contain,
-              height: 100,
+              height: screenHeight * 0.1, // 10% of screen height
             ),
           ),
         ],
