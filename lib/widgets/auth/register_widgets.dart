@@ -7,19 +7,49 @@ import 'package:lencho/widgets/BushCloudPainter.dart';
 import 'package:lencho/screens/auth/Email_Verification_Page.dart';
 import 'package:lencho/screens/auth/Phone_Verification_Page.dart';
 
+void main() => runApp(MaterialApp(home: RegistrationPage()));
+
+class RegistrationPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // Ensure the Scaffold resizes to avoid bottom insets.
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Stack(
+            children: [
+              const BackgroundWidget(),
+              const BackButtonWidget(),
+              const BushWidget(),
+              const LogoTitleWidget(),
+              RegistrationFormWidget(),
+              const FlowerWidget(), // FlowerWidget wrapped in IgnorePointer below.
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Widget that paints the top and bottom background colors.
 class BackgroundWidget extends StatelessWidget {
   const BackgroundWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to obtain the screen height.
     final screenHeight = MediaQuery.of(context).size.height;
     const Color topColor = Color(0xFFFFF4BE);
     const Color bottomColor = Color(0xFFACE268);
     return Stack(
       children: [
-        // Top background container.
         Positioned(
           top: 0,
           left: 0,
@@ -27,7 +57,6 @@ class BackgroundWidget extends StatelessWidget {
           height: screenHeight * 0.7,
           child: Container(color: topColor),
         ),
-        // Bottom background container.
         Positioned(
           top: screenHeight * 0.7,
           left: 0,
@@ -46,13 +75,12 @@ class BackButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimensions.
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final double backButtonSize = screenWidth * 0.08;
     return Positioned(
-      top: screenHeight * 0.05, // ~5% from top.
-      left: screenWidth * 0.04, // ~4% from left.
+      top: screenHeight * 0.05,
+      left: screenWidth * 0.04,
       child: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Image.asset(
@@ -71,7 +99,6 @@ class BushWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Obtain screen height from MediaQuery.
     final screenHeight = MediaQuery.of(context).size.height;
     return Positioned(
       top: screenHeight * 0.5,
@@ -93,7 +120,6 @@ class LogoTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Obtain screen dimensions and define sizes.
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final double logoSize = screenWidth * 0.25;
@@ -105,7 +131,6 @@ class LogoTitleWidget extends StatelessWidget {
       right: 0,
       child: Column(
         children: [
-          // Logo image.
           Image.asset(
             'assets/images/logo.png',
             width: logoSize,
@@ -130,13 +155,11 @@ class LogoTitleWidget extends StatelessWidget {
 class RegistrationFormWidget extends StatelessWidget {
   RegistrationFormWidget({Key? key}) : super(key: key);
 
-  // Retrieve the RegisterController instance via GetX.
   final RegisterController controller = Get.put(RegisterController());
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    // Obtain screen dimensions and compute relative sizes.
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final double verticalSpace = screenHeight * 0.02;
@@ -152,39 +175,33 @@ class RegistrationFormWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Name field.
             RegisterTextField(
               controller: controller.nameController,
               hint: 'Name',
             ),
             SizedBox(height: verticalSpace),
-            // Email field.
             RegisterTextField(
               controller: controller.emailController,
               hint: 'Email',
             ),
             SizedBox(height: verticalSpace),
-            // Password field.
             RegisterTextField(
               controller: controller.passwordController,
               hint: 'Password',
               obscureText: true,
             ),
             SizedBox(height: verticalSpace),
-            // Confirm Password field.
             RegisterTextField(
               controller: controller.confirmPasswordController,
               hint: 'Confirm Password',
               obscureText: true,
             ),
             SizedBox(height: verticalSpace),
-            // Mobile field.
             RegisterTextField(
               controller: controller.mobileController,
               hint: 'Mobile',
             ),
             SizedBox(height: verticalSpace * 1.2),
-            // Row with two buttons: Register with Email and Register with Phone.
             SizedBox(
               width: textFieldWidth,
               child: Row(
@@ -261,7 +278,7 @@ class RegistrationFormWidget extends StatelessWidget {
 }
 
 /// A reusable text field for the registration form.
-class RegisterTextField extends StatelessWidget {
+class RegisterTextField extends StatefulWidget {
   final String hint;
   final bool obscureText;
   final TextEditingController controller;
@@ -274,8 +291,26 @@ class RegisterTextField extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _RegisterTextFieldState createState() => _RegisterTextFieldState();
+}
+
+class _RegisterTextFieldState extends State<RegisterTextField> {
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Compute dimensions internally.
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final double width = screenWidth * 0.85;
@@ -285,10 +320,11 @@ class RegisterTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
-        controller: controller,
-        obscureText: obscureText,
+        focusNode: _focusNode,
+        controller: widget.controller,
+        obscureText: widget.obscureText,
         decoration: InputDecoration(
-          hintText: hint,
+          hintText: widget.hint,
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
@@ -306,23 +342,19 @@ class RegisterTextField extends StatelessWidget {
 }
 
 /// Widget for the flower image pinned at the bottom.
+/// Wrapped in IgnorePointer to allow taps to pass through.
 class FlowerWidget extends StatelessWidget {
   const FlowerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Get screen height for possible adjustments.
-    final screenHeight = MediaQuery.of(context).size.height;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
         child: Image.asset(
           'assets/images/flower.png',
           fit: BoxFit.contain,
-          height: screenHeight * 0.0, // Adjust height if needed.
+          height: 80,
         ),
       ),
     );

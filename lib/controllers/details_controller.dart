@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:geolocator/geolocator.dart'; // Add geolocator import
 
 class DetailsController extends GetxController {
   // Controllers for each extra detail.
@@ -10,51 +9,21 @@ class DetailsController extends GetxController {
   final cityController = TextEditingController();
   final stateController = TextEditingController();
   final postalZipController = TextEditingController();
-
-  /// Retrieves the user's current location as a GeoPoint.
-  Future<GeoPoint?> _getUserLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      Get.snackbar('Error', 'Location services are disabled.');
-      return null;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        Get.snackbar('Error', 'Location permissions are denied.');
-        return null;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      Get.snackbar('Error', 'Location permissions are permanently denied.');
-      return null;
-    }
-
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      return GeoPoint(position.latitude, position.longitude);
-    } catch (e) {
-      Get.snackbar('Error', 'Could not retrieve location.');
-      return null;
-    }
-  }
-
+  final locationController = TextEditingController(); // For manual location input
+  
   /// Submits the details to Firestore for the current user.
   Future<void> submitDetails() async {
     final streetAddress = streetAddressController.text.trim();
     final city = cityController.text.trim();
     final state = stateController.text.trim();
     final postalZip = postalZipController.text.trim();
+    final locationText = locationController.text.trim(); // Expect "latitude, longitude"
 
     if (streetAddress.isEmpty ||
         city.isEmpty ||
         state.isEmpty ||
-        postalZip.isEmpty) {
+        postalZip.isEmpty ||
+        locationText.isEmpty) {
       Get.snackbar('Error', 'Please fill in all the details.');
       return;
     }
@@ -65,8 +34,22 @@ class DetailsController extends GetxController {
       return;
     }
 
-    // Retrieve the current location.
-    GeoPoint? location = await _getUserLocation();
+    // Parse the location from the text input.
+    GeoPoint? location;
+    try {
+      final parts = locationText.split(',');
+      if (parts.length == 2) {
+        final latitude = double.parse(parts[0].trim());
+        final longitude = double.parse(parts[1].trim());
+        location = GeoPoint(latitude, longitude);
+      } else {
+        Get.snackbar('Error', 'Please enter location as "latitude, longitude".');
+        return;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Invalid location format. Please enter valid numbers.');
+      return;
+    }
 
     try {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
@@ -74,7 +57,7 @@ class DetailsController extends GetxController {
         'city': city,
         'state': state,
         'postalZip': postalZip,
-        'location': location, // Save the location (could be null if not available)
+        'location': location, // Save the location as a GeoPoint.
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
@@ -92,6 +75,7 @@ class DetailsController extends GetxController {
     cityController.dispose();
     stateController.dispose();
     postalZipController.dispose();
+    locationController.dispose();
     super.onClose();
   }
 }

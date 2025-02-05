@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
-import 'package:lencho/screens/home/home_page.dart';
 import 'package:lencho/screens/auth/Register_Page.dart';
 import 'package:lencho/screens/auth/Forgot_Page.dart';
 import 'package:lencho/controllers/login_controller.dart'; // Make sure the path is correct
@@ -362,7 +361,7 @@ class PositionedLoginForm extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const RegisterPage(),
+                          builder: (_) => RegisterPage(),
                         ),
                       );
                     },

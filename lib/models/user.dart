@@ -6,7 +6,6 @@ class UserDetails {
   final String city;
   final String state;
   final String postalZip;
-  final GeoPoint? location; // Location stored as a GeoPoint
   final DateTime? updatedAt;
 
   UserDetails({
@@ -15,7 +14,6 @@ class UserDetails {
     required this.city,
     required this.state,
     required this.postalZip,
-    this.location,
     this.updatedAt,
   });
 
@@ -27,7 +25,6 @@ class UserDetails {
       city: map['city'] ?? '',
       state: map['state'] ?? '',
       postalZip: map['postalZip'] ?? '',
-      location: map['location'] as GeoPoint?, // Expect a GeoPoint or null
       updatedAt: map['updatedAt'] != null
           ? (map['updatedAt'] as Timestamp).toDate()
           : null,
@@ -41,7 +38,6 @@ class UserDetails {
       'city': city,
       'state': state,
       'postalZip': postalZip,
-      'location': location, // Will be null if no location is provided
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
   }
