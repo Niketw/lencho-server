@@ -28,8 +28,12 @@ class _LoginPageState extends State<LoginPage> {
           const TopDotsWidget(),
           BushAnimationWidget(showLogin: _showLogin),
           const LogoCompanyWidget(),
-          if (!_showLogin) GetStartedButtonWidget(onPressed: _onGetStarted),
-          if (_showLogin) const PositionedLoginForm(),
+          if (!_showLogin) 
+            GetStartedButtonWidget(
+              onPressed: _onGetStarted
+            ),
+          if (_showLogin) 
+            const PositionedLoginForm(),
           const FlowerWidget(),
         ],
       ),

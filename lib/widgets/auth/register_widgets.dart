@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../widgets/BushCloudPainter.dart';
+import 'package:lencho/controller/register_controller.dart';
+import 'package:lencho/widgets/BushCloudPainter.dart';
+
+import 'package:get/get.dart';
 
 /// Widget that paints the top and bottom background colors.
 class BackgroundWidget extends StatelessWidget {
@@ -120,12 +123,12 @@ class LogoTitleWidget extends StatelessWidget {
   }
 }
 
-/// Widget for the registration form.
 class RegistrationFormWidget extends StatelessWidget {
-  /// Callback to be invoked when "Send OTP" is pressed.
-  final VoidCallback onSendOtp;
-  const RegistrationFormWidget({Key? key, required this.onSendOtp})
-      : super(key: key);
+  RegistrationFormWidget({Key? key}) : super(key: key);
+
+  // Retrieve the RegisterController instance via GetX.
+  final RegisterController controller = Get.put(RegisterController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -141,62 +144,86 @@ class RegistrationFormWidget extends StatelessWidget {
       alignment: Alignment.center,
       padding: EdgeInsets.all(verticalSpace),
       color: Colors.transparent,
-      child: Column(
-        children: [
-          // First Name field
-          const RegisterTextField(hint: 'First Name'),
-          SizedBox(height: verticalSpace),
-          // Last Name field
-          const RegisterTextField(hint: 'Last Name'),
-          SizedBox(height: verticalSpace),
-          // Email field
-          const RegisterTextField(hint: 'Email'),
-          SizedBox(height: verticalSpace),
-          // Password field
-          const RegisterTextField(hint: 'Password', obscureText: true),
-          SizedBox(height: verticalSpace),
-          // Confirm Password field
-          const RegisterTextField(hint: 'Confirm Password', obscureText: true),
-          SizedBox(height: verticalSpace),
-          // Mobile field
-          const RegisterTextField(hint: 'Mobile'),
-          SizedBox(height: verticalSpace * 1.2),
-          // Send OTP button
-          SizedBox(
-            width: textFieldWidth,
-            height: buttonHeight,
-            child: ElevatedButton(
-              onPressed: onSendOtp,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF0D522C),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Name field
+            RegisterTextField(
+              controller: controller.nameController,
+              hint: 'Name',
+            ),
+            SizedBox(height: verticalSpace),
+            // Email field
+            RegisterTextField(
+              controller: controller.emailController,
+              hint: 'Email',
+            ),
+            SizedBox(height: verticalSpace),
+            // Password field
+            RegisterTextField(
+              controller: controller.passwordController,
+              hint: 'Password',
+              obscureText: true,
+            ),
+            SizedBox(height: verticalSpace),
+            // Confirm Password field
+            RegisterTextField(
+              controller: controller.confirmPasswordController,
+              hint: 'Confirm Password',
+              obscureText: true,
+            ),
+            SizedBox(height: verticalSpace),
+            // Mobile field
+            RegisterTextField(
+              controller: controller.mobileController,
+              hint: 'Mobile',
+            ),
+            SizedBox(height: verticalSpace * 1.2),
+            // Send OTP button
+            SizedBox(
+              width: textFieldWidth,
+              height: buttonHeight,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Call the sendOtp method from the controller.
+                  controller.sendOtp();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF0D522C),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 0,
                 ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Send OTP',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                child: const Text(
+                  'Send OTP',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
+
 /// A reusable text field for the registration form.
 class RegisterTextField extends StatelessWidget {
   final String hint;
   final bool obscureText;
+  final TextEditingController controller; // <-- add controller parameter
 
   const RegisterTextField({
     Key? key,
+    required this.controller,
     required this.hint,
     this.obscureText = false,
   }) : super(key: key);
@@ -213,6 +240,7 @@ class RegisterTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
+        controller: controller, // assign the controller
         obscureText: obscureText,
         decoration: InputDecoration(
           hintText: hint,
@@ -231,6 +259,7 @@ class RegisterTextField extends StatelessWidget {
     );
   }
 }
+
 
 /// Widget for the flower image pinned at the bottom.
 class FlowerWidget extends StatelessWidget {

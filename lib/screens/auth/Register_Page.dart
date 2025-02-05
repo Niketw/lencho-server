@@ -32,7 +32,6 @@ class RegisterPage extends StatelessWidget {
             right: horizontalPadding,
             child: SingleChildScrollView(
               child: RegistrationFormWidget(
-                onSendOtp: () => _goToOtpPage(context),
               ),
             ),
           ),
