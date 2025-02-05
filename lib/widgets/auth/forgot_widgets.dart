@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../BushCloudPainter.dart'; // Adjust the path as needed
+import 'package:get/get.dart';
+import 'package:lencho/widgets/BushCloudPainter.dart'; // Adjust the path as needed
+import 'package:lencho/controllers/forgot_controller.dart'; // Import your controller
 
 /// Widget that paints the top and bottom background colors.
 class ForgotBackgroundWidget extends StatelessWidget {
@@ -104,40 +106,10 @@ class ForgotLogoWidget extends StatelessWidget {
 
 /// Widget for the email text field and reset password button.
 class ForgotFormWidget extends StatelessWidget {
-  const ForgotFormWidget({Key? key}) : super(key: key);
+  ForgotFormWidget({Key? key}) : super(key: key);
 
-  void _resetPassword(BuildContext context) {
-    // TODO: Implement actual password reset logic.
-    Navigator.pop(context);
-  }
-
-  // Internal method to build the email text field.
-  Widget _buildTextField(BuildContext context) {
-    final screenWidth  = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final double width  = screenWidth * 0.85;
-    final double height = screenHeight * 0.06;
-
-    return SizedBox(
-      width: width,
-      height: height,
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Email',
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: width * 0.05,
-            vertical: height * 0.2,
-          ),
-        ),
-      ),
-    );
-  }
+  // Instantiate the ForgotPasswordController using GetX.
+  final ForgotPasswordController forgotController = Get.put(ForgotPasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -157,13 +129,34 @@ class ForgotFormWidget extends StatelessWidget {
         color: Colors.transparent,
         child: Column(
           children: [
-            _buildTextField(context),
+            // Email text field using the controller.
+            SizedBox(
+              width: textFieldWidth,
+              height: screenHeight * 0.06,
+              child: TextField(
+                controller: forgotController.emailController,
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: textFieldWidth * 0.05,
+                    vertical: screenHeight * 0.02,
+                  ),
+                ),
+              ),
+            ),
             SizedBox(height: verticalSpace * 1.2),
+            // Reset Password button
             SizedBox(
               width: textFieldWidth,
               height: buttonHeight,
               child: ElevatedButton(
-                onPressed: () => _resetPassword(context),
+                onPressed: () => forgotController.resetPassword(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: const Color(0xFF0D522C),

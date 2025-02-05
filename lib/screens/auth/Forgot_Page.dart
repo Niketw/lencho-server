@@ -9,13 +9,13 @@ class ForgotPasswordPage extends StatelessWidget {
     return Scaffold(
       // You can set resizeToAvoidBottomInset as needed.
       body: Stack(
-        children: const [
-          ForgotBackgroundWidget(),
-          ForgotBackButtonWidget(),
-          ForgotBushWidget(),
-          ForgotLogoWidget(),
+        children: [
+          const ForgotBackgroundWidget(),
+          const ForgotBackButtonWidget(),
+          const ForgotBushWidget(),
+          const ForgotLogoWidget(),
           ForgotFormWidget(),
-          ForgotFlowerWidget(),
+          const ForgotFlowerWidget(),
         ],
       ),
     );

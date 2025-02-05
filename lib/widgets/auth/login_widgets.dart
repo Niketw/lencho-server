@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../BushCloudPainter.dart';
-import '../../screens/home/home_page.dart';
-import '../../screens/auth/Register_Page.dart';
-import '../../screens/auth/Forgot_Page.dart';
+import 'package:get/get.dart';
+import 'package:lencho/widgets/BushCloudPainter.dart';
+import 'package:lencho/screens/home/home_page.dart';
+import 'package:lencho/screens/auth/Register_Page.dart';
+import 'package:lencho/screens/auth/Forgot_Page.dart';
+import 'package:lencho/controllers/login_controller.dart'; // Make sure the path is correct
 
 /// The background splits the screen into a yellow top and a green bottom.
 class BackgroundWidget extends StatelessWidget {
@@ -137,7 +139,6 @@ class LogoCompanyWidget extends StatelessWidget {
             curve: Curves.easeInOut,
             width: logoSizeBig,
             height: logoSizeBig,
-            // You could later pass a flag to change size when login is shown.
             child: Image.asset(
               'assets/images/logo.png',
               fit: BoxFit.contain,
@@ -207,7 +208,10 @@ class GetStartedButtonWidget extends StatelessWidget {
 
 /// PositionedLoginForm holds the login form and related buttons.
 class PositionedLoginForm extends StatelessWidget {
-  const PositionedLoginForm({Key? key}) : super(key: key);
+  PositionedLoginForm({Key? key}) : super(key: key);
+
+  // Initialize the LoginController using GetX.
+  final LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -235,13 +239,14 @@ class PositionedLoginForm extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Name field
+                // Email field
                 SizedBox(
                   width: fieldWidth,
                   child: TextField(
+                    controller: loginController.emailController,
                     style: TextStyle(fontSize: fontSizeNormal),
                     decoration: InputDecoration(
-                      hintText: 'Name',
+                      hintText: 'Email',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -260,6 +265,7 @@ class PositionedLoginForm extends StatelessWidget {
                 SizedBox(
                   width: fieldWidth,
                   child: TextField(
+                    controller: loginController.passwordController,
                     obscureText: true,
                     style: TextStyle(fontSize: fontSizeNormal),
                     decoration: InputDecoration(
@@ -305,12 +311,8 @@ class PositionedLoginForm extends StatelessWidget {
                   height: buttonHeight,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const HomePage(),
-                        ),
-                      );
+                      // Use the controller method to log in.
+                      loginController.loginUser();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

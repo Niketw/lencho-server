@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../BushCloudPainter.dart';
+import 'package:get/get.dart';
+import 'package:lencho/controllers/details_controller.dart';
+import 'package:lencho/widgets/BushCloudPainter.dart';
 
 /// The background widget paints the top and bottom background colors.
 class BackgroundWidget extends StatelessWidget {
@@ -118,7 +120,12 @@ class LogoTitleWidget extends StatelessWidget {
 /// A reusable text field widget for address details.
 class AddressTextField extends StatelessWidget {
   final String hint;
-  const AddressTextField({Key? key, required this.hint}) : super(key: key);
+  final TextEditingController controller;
+  const AddressTextField({
+    Key? key,
+    required this.hint,
+    required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +139,7 @@ class AddressTextField extends StatelessWidget {
       width: width,
       height: height,
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
@@ -156,6 +164,9 @@ class AddressFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Instantiate the DetailsController via GetX.
+    final DetailsController detailsController = Get.put(DetailsController());
+
     // Get dimensions
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -172,13 +183,25 @@ class AddressFormWidget extends StatelessWidget {
         color: Colors.transparent,
         child: Column(
           children: [
-            const AddressTextField(hint: 'Street Address'),
+            AddressTextField(
+              hint: 'Street Address',
+              controller: detailsController.streetAddressController,
+            ),
             SizedBox(height: verticalSpace),
-            const AddressTextField(hint: 'City'),
+            AddressTextField(
+              hint: 'City',
+              controller: detailsController.cityController,
+            ),
             SizedBox(height: verticalSpace),
-            const AddressTextField(hint: 'State'),
+            AddressTextField(
+              hint: 'State',
+              controller: detailsController.stateController,
+            ),
             SizedBox(height: verticalSpace),
-            const AddressTextField(hint: 'Postal Zip'),
+            AddressTextField(
+              hint: 'Postal Zip',
+              controller: detailsController.postalZipController,
+            ),
             SizedBox(height: verticalSpace * 1.2),
             // Submit button
             SizedBox(
@@ -186,7 +209,7 @@ class AddressFormWidget extends StatelessWidget {
               height: buttonHeight,
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your submit action here.
+                  detailsController.submitDetails();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -247,7 +270,9 @@ class FlowerWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: Image.asset(
           'assets/images/flower.png',
           fit: BoxFit.contain,

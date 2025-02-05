@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'Otp_Page.dart'; // Your OTP page
+import 'Email_Verification_Page.dart'; // Your Email OTP page
+import 'Phone_Verification_Page.dart'; // Your Phone Verification page
 import '../../widgets/auth/register_widgets.dart'; // Import the custom widgets
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
+  // (Optional) Function to navigate to the OTP page if needed.
   void _goToOtpPage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const OtpPage()),
+      MaterialPageRoute(builder: (_) => const EmailVerificationPage()),
     );
   }
 
@@ -31,8 +33,7 @@ class RegisterPage extends StatelessWidget {
             left: horizontalPadding,
             right: horizontalPadding,
             child: SingleChildScrollView(
-              child: RegistrationFormWidget(
-              ),
+              child: RegistrationFormWidget(),
             ),
           ),
           const FlowerWidget(),

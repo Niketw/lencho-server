@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/auth/login_widgets.dart'; // Import the separated login widgets
+import 'package:lencho/widgets/auth/login_widgets.dart'; // Import the separated login widgets
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _onGetStarted
             ),
           if (_showLogin) 
-            const PositionedLoginForm(),
+            PositionedLoginForm(),
           const FlowerWidget(),
         ],
       ),
