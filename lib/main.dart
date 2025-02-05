@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/login/Login_Page.dart';
+import 'screens/auth/Login_Page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lencho/firebase_options.dart';
 
@@ -12,7 +12,7 @@ void main() async {
 }
 
 class FarmApp extends StatelessWidget {
-  const FarmApp({super.key});
+  const FarmApp({super.key}); 
 
   @override
   Widget build(BuildContext context) {
