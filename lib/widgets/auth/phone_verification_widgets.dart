@@ -8,20 +8,21 @@ class PhoneVerificationWidget extends StatelessWidget {
   PhoneVerificationWidget({Key? key}) : super(key: key);
 
   // Instantiate the PhoneVerificationController using GetX.
-  final PhoneVerificationController controller = Get.put(PhoneVerificationController());
+  final PhoneVerificationController controller =
+      Get.put(PhoneVerificationController());
 
   @override
   Widget build(BuildContext context) {
     // Screen dimensions for responsive sizing.
-    final screenWidth  = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final double verticalSpace  = screenHeight * 0.02;
+    final double verticalSpace = screenHeight * 0.02;
     final double textFieldWidth = screenWidth * 0.85;
-    final double buttonHeight   = screenHeight * 0.06;
+    final double buttonHeight = screenHeight * 0.06;
 
     return Stack(
       children: [
-        // Background
+        // Background colors.
         Positioned(
           top: 0,
           left: 0,
@@ -36,12 +37,12 @@ class PhoneVerificationWidget extends StatelessWidget {
           bottom: 0,
           child: Container(color: const Color(0xFFACE268)),
         ),
-        // Back Button
+        // Back Button using GetX for navigation.
         Positioned(
           top: screenHeight * 0.05,
           left: screenWidth * 0.04,
           child: GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: () => Get.back(),
             child: Image.asset(
               'assets/images/icon/back.png',
               width: screenWidth * 0.08,
@@ -49,7 +50,7 @@ class PhoneVerificationWidget extends StatelessWidget {
             ),
           ),
         ),
-        // Logo and Title
+        // Logo and Title.
         Positioned(
           top: screenHeight * 0.1,
           left: 0,
@@ -73,7 +74,7 @@ class PhoneVerificationWidget extends StatelessWidget {
             ],
           ),
         ),
-        // Phone Verification Form (Phone number, OTP input, and two side-by-side buttons)
+        // Phone Verification Form: Phone input, OTP input and two side-by-side buttons.
         Positioned(
           top: screenHeight * 0.3,
           left: screenWidth * 0.05,
@@ -84,7 +85,7 @@ class PhoneVerificationWidget extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Phone Number Field
+                // Phone Number Field.
                 SizedBox(
                   width: textFieldWidth,
                   height: buttonHeight,
@@ -107,7 +108,7 @@ class PhoneVerificationWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: verticalSpace),
-                // OTP Input Widget (6 rounded boxes)
+                // OTP Input Widget (6 rounded boxes).
                 OTPInputWidget(
                   onCompleted: (otp) {
                     // When OTP input is complete, update the controller's OTP value.
@@ -115,11 +116,11 @@ class PhoneVerificationWidget extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: verticalSpace * 1.2),
-                // Two buttons side-by-side
+                // Two buttons side-by-side.
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Send OTP Button
+                    // Send OTP Button.
                     SizedBox(
                       width: textFieldWidth * 0.4,
                       height: buttonHeight,
@@ -143,7 +144,7 @@ class PhoneVerificationWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: textFieldWidth * 0.1),
-                    // Verify OTP Button
+                    // Verify OTP Button.
                     SizedBox(
                       width: textFieldWidth * 0.4,
                       height: buttonHeight,
@@ -172,7 +173,7 @@ class PhoneVerificationWidget extends StatelessWidget {
             ),
           ),
         ),
-        // Decorative Bush (optional)
+        // Decorative Bush using a CustomPainter.
         Positioned(
           top: screenHeight * 0.5,
           left: 0,
@@ -184,11 +185,12 @@ class PhoneVerificationWidget extends StatelessWidget {
             ),
           ),
         ),
-        // Flower Image at Bottom
+        // Flower Image pinned at the bottom.
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
             child: Image.asset(
               'assets/images/flower.png',
               fit: BoxFit.contain,
@@ -246,7 +248,7 @@ class _OTPInputWidgetState extends State<OTPInputWidget> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    // Calculate width for each box (with a 10-pixel gap between boxes)
+    // Calculate width for each OTP box (with a 10-pixel gap between boxes)
     double totalGap = 10 * (otpLength - 1);
     double boxWidth = (screenWidth * 0.85 - totalGap) / otpLength;
 

@@ -235,7 +235,8 @@ class AddressFormWidget extends StatelessWidget {
               height: buttonHeight,
               child: OutlinedButton(
                 onPressed: () {
-                  // Add your "do this later" action here.
+                  // Replace with your desired "do this later" action.
+                  // For example: Get.offAll(() => HomePage());
                 },
                 style: OutlinedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -276,7 +277,7 @@ class FlowerWidget extends StatelessWidget {
         child: Image.asset(
           'assets/images/flower.png',
           fit: BoxFit.contain,
-          height: screenHeight * 0.000001, // Adjust height if needed
+          height: screenHeight * 0.1, // Adjusted height for visibility
         ),
       ),
     );

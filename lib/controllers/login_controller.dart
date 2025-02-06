@@ -1,4 +1,3 @@
-// login_controller.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -42,10 +41,10 @@ class LoginController extends GetxController {
           // Navigate to the home page.
           Get.offAll(() => HomePage());
         } else {
-          // Email is not verified; sign out the user and navigate to the verification page.
-          await FirebaseAuth.instance.signOut();
+          // Email is not verified.
           Get.snackbar('Not Verified',
               'Please verify your email before logging in.');
+          // Navigate to the EmailVerificationPage (user remains logged in)
           Get.to(() => EmailVerificationPage());
         }
       }

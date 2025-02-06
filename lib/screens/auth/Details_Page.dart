@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/auth/detail_widgets.dart';
+import 'package:lencho/widgets/auth/detail_widgets.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({Key? key}) : super(key: key);
@@ -7,8 +7,8 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Prevent resizing when the keyboard appears.
-      resizeToAvoidBottomInset: false,
+      // Optionally set resizeToAvoidBottomInset if needed.
+      resizeToAvoidBottomInset: true,
       body: Stack(
         children: const [
           BackgroundWidget(),

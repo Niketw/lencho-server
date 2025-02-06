@@ -1,9 +1,8 @@
+// register_widgets.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lencho/controllers/register_controller.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
-
-// Import your verification pages.
 import 'package:lencho/screens/auth/Email_Verification_Page.dart';
 import 'package:lencho/screens/auth/Phone_Verification_Page.dart';
 
@@ -210,13 +209,9 @@ class RegistrationFormWidget extends StatelessWidget {
                     child: SizedBox(
                       height: buttonHeight,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const EmailVerificationPage(),
-                            ),
-                          );
+                        onPressed: () async {
+                          // Call the email registration method.
+                          await controller.sendOtp();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -241,13 +236,9 @@ class RegistrationFormWidget extends StatelessWidget {
                     child: SizedBox(
                       height: buttonHeight,
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PhoneVerificationPage(verificationId: ''),
-                            ),
-                          );
+                        onPressed: () async {
+                          // Call the phone registration method.
+                          await controller.sendPhoneOtp();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

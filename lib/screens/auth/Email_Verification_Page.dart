@@ -1,5 +1,6 @@
-// email_verification_page.dart
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:lencho/controllers/email.verification_controller.dart';
 import 'package:lencho/widgets/auth/email_verification_widgets.dart'; // Adjust the import path as needed
 
 class EmailVerificationPage extends StatelessWidget {
@@ -7,8 +8,11 @@ class EmailVerificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the EmailVerificationController (if you want to use it for resending, etc.)
+    final EmailVerificationController controller =
+        Get.put(EmailVerificationController());
+
     return Scaffold(
-      // Optionally set resizeToAvoidBottomInset if needed.
       resizeToAvoidBottomInset: false,
       appBar: AppBar(title: const Text('Email Verification')),
       body: Stack(
@@ -17,9 +21,15 @@ class EmailVerificationPage extends StatelessWidget {
           EmailVerificationBackButtonWidget(),
           EmailVerificationBushWidget(),
           EmailVerificationLogoTitleWidget(),
-          EmailVerificationWidget(),
+          VerificationWidget(), // The unified widget that checks for verification status.
           EmailVerificationFlowerWidget(),
         ],
+      ),
+      // Optionally, you can add a floating action button to resend the verification email.
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: controller.sendVerificationEmail,
+        label: const Text("Resend Email"),
+        icon: const Icon(Icons.email),
       ),
     );
   }

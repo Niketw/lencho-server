@@ -84,9 +84,7 @@ class RegisterController extends GetxController {
       await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: mobile,
         timeout: const Duration(seconds: 60),
-        verificationCompleted: (
-          PhoneAuthCredential credential
-          ) async {
+        verificationCompleted: (PhoneAuthCredential credential) async {
           // This callback is executed when verification is done automatically.
           // Optionally, you can sign in with the credential here if needed.
         },
@@ -95,8 +93,7 @@ class RegisterController extends GetxController {
         },
         codeSent: (String verificationId, int? resendToken) {
           // Navigate to the phone verification screen and pass the verificationId.
-          Get.to(() => PhoneVerificationPage(verificationId: verificationId)
-          );
+          Get.to(() => PhoneVerificationPage(verificationId: verificationId));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           // Auto-retrieval timeout callback.
