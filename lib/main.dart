@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'screens/auth/Login_Page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lencho/firebase_options.dart';
@@ -8,22 +9,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const FarmApp());
+  runApp(MyApp());
 }
 
-class FarmApp extends StatelessWidget {
-  const FarmApp({super.key}); 
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Farm App',
+    return GetMaterialApp(
+      title: 'Lencho',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+        primarySwatch: Colors.green,
       ),
-      home: const LoginPage(),
+      home: LoginPage(), // Or your initial route.
     );
   }
 }
