@@ -213,7 +213,7 @@ class _EmailVerificationWidgetState extends State<EmailVerificationWidget> {
       child: Center(
         child: isVerifying
             ? Image.asset(
-                'assets/images/loading.png', // Your loading image asset
+                'assets/images/loading-1.png', // Your loading image asset
                 width: screenWidth * 0.5,
               )
             : isVerified
