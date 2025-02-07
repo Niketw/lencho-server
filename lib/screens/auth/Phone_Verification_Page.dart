@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/controllers/phone_verification_controller.dart';
+import 'package:lencho/controllers/auth/phone_verification_controller.dart';
 
 class PhoneVerificationPage extends StatelessWidget {
   final String verificationId;

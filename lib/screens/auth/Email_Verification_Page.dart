@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/controllers/email.verification_controller.dart';
+import 'package:lencho/controllers/auth/email_verification_controller.dart';
 import 'package:lencho/widgets/auth/email_verification_widgets.dart'; // Adjust the import path as needed
 
 class EmailVerificationPage extends StatelessWidget {
