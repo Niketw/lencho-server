@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
           Stack(
             children: [
               const SizedBox(
-                height: 80,
+                height: 60,
                 width: double.infinity,
                 child: BushCloudRotated(),
               ),
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
                       const Icon(Icons.location_on, color: Color(0xFF2D5A27)),
                       Row(
                         children: [
-                          Image.asset('assets/icon/icon.png', height: 24),
+                          Image.asset('assets/images/logo.png', height: 24),
                           const SizedBox(width: 8),
                           const Text(
                             'Lencho Inc.',
