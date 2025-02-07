@@ -1,7 +1,7 @@
 // phone_verification_widget.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/controllers/phone_verification_controller.dart';
+import 'package:lencho/controllers/auth/phone_verification_controller.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
 
 class PhoneVerificationWidget extends StatelessWidget {

@@ -1,12 +1,12 @@
 // register_widgets.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/controllers/register_controller.dart';
+import 'package:lencho/controllers/auth/register_controller.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
 import 'package:lencho/screens/auth/Email_Verification_Page.dart';
 import 'package:lencho/screens/auth/Phone_Verification_Page.dart';
 
-void main() => runApp(MaterialApp(home: RegistrationPage()));
+void main() => runApp(GetMaterialApp(home: RegistrationPage()));
 
 class RegistrationPage extends StatelessWidget {
   @override

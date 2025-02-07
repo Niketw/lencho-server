@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart'; // Adjust the path as needed
-import 'package:lencho/controllers/forgot_controller.dart'; // Import your controller
+import 'package:lencho/controllers/auth/forgot_controller.dart'; // Import your controller
 
 /// Widget that paints the top and bottom background colors.
 class ForgotBackgroundWidget extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
 import 'package:lencho/screens/auth/Register_Page.dart';
 import 'package:lencho/screens/auth/Forgot_Page.dart';
-import 'package:lencho/controllers/login_controller.dart'; // Make sure the path is correct
+import 'package:lencho/controllers/auth/login_controller.dart'; // Make sure the path is correct
 
 /// The background splits the screen into a yellow top and a green bottom.
 class BackgroundWidget extends StatelessWidget {

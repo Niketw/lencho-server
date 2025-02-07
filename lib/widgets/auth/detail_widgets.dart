@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/controllers/details_controller.dart';
+import 'package:lencho/controllers/auth/details_controller.dart';
 import 'package:lencho/widgets/BushCloudPainter.dart';
 
 /// The background widget paints the top and bottom background colors.
