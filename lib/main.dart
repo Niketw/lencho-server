@@ -1,18 +1,24 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'screens/auth/Login_Page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lencho/firebase_options.dart';
+import 'firebase_options.dart';
+import 'controllers/home/logout_controller.dart';
+import 'widgets/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  // Register the LogoutController for dependency injection.
+  Get.put(LogoutController());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -21,7 +27,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: LoginPage(), // Or your initial route.
+      // Use the AuthWrapper widget to determine whether to show HomePage or LoginPage.
+      home: const AuthWrapper(),
     );
   }
 }

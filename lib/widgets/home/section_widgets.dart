@@ -5,10 +5,10 @@ class ScrollableSection extends StatelessWidget {
   final List<SectionItem> items;
 
   const ScrollableSection({
-    super.key,
+    Key? key,
     required this.title,
     required this.items,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
