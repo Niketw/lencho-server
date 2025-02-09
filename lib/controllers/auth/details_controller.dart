@@ -2,10 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/screens/home/home_page.dart';  // Import your HomePage
 import 'package:lencho/models/UserDetails.dart';
+import 'package:lencho/screens/home/home_page.dart'; // Import your HomePage
 
 class DetailsController extends GetxController {
+  static DetailsController get instance => Get.find();
+
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  /// Creates (or updates) a user document in Firestore using the user's UID.
+  Future<void> createUser(UserDetails user) async {
+    await _db
+        .collection("UserDetails")
+        .doc(user.uid)
+        .set(user.toMap(), SetOptions(merge: true));
+  }
+
   // Controllers for each address detail.
   final TextEditingController streetAddressController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
@@ -20,7 +32,10 @@ class DetailsController extends GetxController {
     final String postalZip = postalZipController.text.trim();
 
     // Validate required fields.
-    if (streetAddress.isEmpty || city.isEmpty || state.isEmpty || postalZip.isEmpty) {
+    if (streetAddress.isEmpty ||
+        city.isEmpty ||
+        state.isEmpty ||
+        postalZip.isEmpty) {
       Get.snackbar('Error', 'Please fill in all the details.');
       return;
     }
@@ -32,17 +47,20 @@ class DetailsController extends GetxController {
       return;
     }
 
+    // Create a UserDetails instance using the input data.
+    final userDetails = UserDetails(
+      uid: user.uid,
+      email: user.email ?? '',
+      streetAddress: streetAddress,
+      city: city,
+      state: state,
+      postalZip: postalZip,
+      updatedAt: DateTime.now(), // You can also let Firestore set the timestamp if preferred.
+    );
+
     // Save the details to Firestore.
     try {
-      await FirebaseFirestore.instance.collection('UserDetails').doc(user.uid).set({
-        'email': user.email,
-        'streetAddress': streetAddress,
-        'city': city,
-        'state': state,
-        'postalZip': postalZip,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-
+      await createUser(userDetails);
       Get.snackbar('Success', 'Your details have been updated.');
       // Redirect to HomePage after successful submission.
       Get.offAll(() => HomePage());
@@ -53,8 +71,8 @@ class DetailsController extends GetxController {
     }
   }
 
-  /// Redirect to HomePage without submitting details.
-  Future<void> doThisLater() async {
+  /// Redirects to HomePage without submitting details.
+  void doThisLater() {
     Get.offAll(() => HomePage());
   }
 

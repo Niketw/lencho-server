@@ -37,6 +37,7 @@ class UserDetails {
   // Convert a UserDetails instance into a Map for saving to Firestore.
   Map<String, dynamic> toMap() {
     return {
+      'email': email,
       'streetAddress': streetAddress,
       'city': city,
       'state': state,
