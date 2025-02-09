@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserDetails {
   final String uid;
+  final String email;
   final String streetAddress;
   final String city;
   final String state;
@@ -10,6 +11,7 @@ class UserDetails {
 
   UserDetails({
     required this.uid,
+    required this.email,
     required this.streetAddress,
     required this.city,
     required this.state,
@@ -21,6 +23,7 @@ class UserDetails {
   factory UserDetails.fromMap(Map<String, dynamic> map, String documentId) {
     return UserDetails(
       uid: documentId,
+      email: map['email'] ?? '',
       streetAddress: map['streetAddress'] ?? '',
       city: map['city'] ?? '',
       state: map['state'] ?? '',

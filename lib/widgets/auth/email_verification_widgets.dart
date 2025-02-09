@@ -152,8 +152,8 @@ class EmailVerificationFlowerWidget extends StatelessWidget {
 /// Unified Verification Widget
 ///
 /// This widget checks if the user is verified by either email or phone.
-/// While checking, it cycles through three loading images. Once verified,
-/// it displays a tick image briefly and then automatically navigates to DetailsPage.
+/// While checking, it cycles continuously through three loading images.
+/// Once verified, it displays a tick image briefly and then automatically navigates to DetailsPage.
 /// -----------------------------------------------------------------
 class VerificationWidget extends StatefulWidget {
   const VerificationWidget({Key? key}) : super(key: key);
@@ -163,8 +163,11 @@ class VerificationWidget extends StatefulWidget {
 }
 
 class _VerificationWidgetState extends State<VerificationWidget> {
+  // Flags to control verification state.
   bool isVerifying = true;
   bool isVerified = false;
+
+  // Timer for cycling through the loading images.
   late Timer loadingTimer;
   int loadingIndex = 0;
 
@@ -183,10 +186,10 @@ class _VerificationWidgetState extends State<VerificationWidget> {
   }
 
   void _startLoadingAnimation() {
+    // This timer will update the loading image index every 500ms.
     loadingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      if (!isVerifying) {
-        timer.cancel();
-      } else {
+      // Continue looping the loading images until verification is complete.
+      if (!isVerified) {
         setState(() {
           loadingIndex = (loadingIndex + 1) % loadingImages.length;
         });
@@ -195,11 +198,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
   }
 
   Future<void> _checkVerification() async {
-    setState(() {
-      isVerifying = true;
-    });
-
-    // Optionally, wait a moment for a smooth transition.
+    // Optionally wait for a short period before checking.
     await Future.delayed(const Duration(seconds: 2));
 
     User? user = FirebaseAuth.instance.currentUser;
@@ -209,22 +208,27 @@ class _VerificationWidgetState extends State<VerificationWidget> {
     // Check if the user is verified either by email or by phone.
     if (user != null &&
         (user.emailVerified ||
-            (user.phoneNumber != null && user.phoneNumber!.isNotEmpty))) {
+         (user.phoneNumber != null && user.phoneNumber!.isNotEmpty))) {
       setState(() {
         isVerified = true;
         isVerifying = false;
       });
       Get.snackbar('Success', 'Verification successful.');
-      loadingTimer.cancel(); // Stop the animation timer.
+      loadingTimer.cancel(); // Stop the loading animation.
       // Wait briefly to show the tick image before navigating.
       await Future.delayed(const Duration(seconds: 1));
       Get.offAll(() => const DetailsPage());
     } else {
+      // If not verified, keep the animation running.
       setState(() {
-        isVerifying = false;
+        isVerifying = true;
       });
-      Get.snackbar('Not Verified',
-          'Verification not complete yet. Please check your inbox or SMS.');
+      // Optionally, schedule another verification check after a delay.
+      Future.delayed(const Duration(seconds: 5), () {
+        if (!isVerified) {
+          _checkVerification();
+        }
+      });
     }
   }
 
@@ -242,23 +246,15 @@ class _VerificationWidgetState extends State<VerificationWidget> {
       left: screenWidth * 0.05,
       right: screenWidth * 0.05,
       child: Center(
-        child: isVerifying
+        child: isVerified
             ? Image.asset(
-                loadingImages[loadingIndex],
+                'assets/images/tick.png',
                 width: screenWidth * 0.5,
               )
-            : isVerified
-                ? Image.asset(
-                    'assets/images/tick.png',
-                    width: screenWidth * 0.5,
-                  )
-                : GestureDetector(
-                    onTap: _checkVerification, // Tap to retry verification.
-                    child: Image.asset(
-                      loadingImages[loadingIndex],
-                      width: screenWidth * 0.5,
-                    ),
-                  ),
+            : Image.asset(
+                loadingImages[loadingIndex],
+                width: screenWidth * 0.5,
+              ),
       ),
     );
   }

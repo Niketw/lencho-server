@@ -34,31 +34,6 @@ class BackgroundWidget extends StatelessWidget {
   }
 }
 
-/// The back button widget (top left).
-class BackButtonWidget extends StatelessWidget {
-  const BackButtonWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // Obtain screen dimensions
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final double backButtonSize = screenWidth * 0.08;
-    return Positioned(
-      top: screenHeight * 0.05,
-      left: screenWidth * 0.04,
-      child: GestureDetector(
-        onTap: () => Navigator.pop(context),
-        child: Image.asset(
-          'assets/images/icon/back.png',
-          width: backButtonSize,
-          height: backButtonSize,
-        ),
-      ),
-    );
-  }
-}
-
 /// The bush widget using your custom painter.
 class BushWidget extends StatelessWidget {
   const BushWidget({Key? key}) : super(key: key);
@@ -262,22 +237,19 @@ class AddressFormWidget extends StatelessWidget {
 }
 
 /// The flower widget pinned at the bottom.
+/// Wrapped in IgnorePointer to allow taps to pass through.
 class FlowerWidget extends StatelessWidget {
   const FlowerWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.bottomCenter,
         child: Image.asset(
           'assets/images/flower.png',
           fit: BoxFit.contain,
-          height: screenHeight * 0.1, // Adjusted height for visibility
+          height: 80,
         ),
       ),
     );

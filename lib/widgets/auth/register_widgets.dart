@@ -1,4 +1,3 @@
-// register_widgets.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lencho/controllers/auth/register_controller.dart';
@@ -11,25 +10,38 @@ void main() => runApp(GetMaterialApp(home: RegistrationPage()));
 class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Retrieve the screen height for positioning.
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      // Ensure the Scaffold resizes to avoid bottom insets.
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
-          ),
+      // Prevent the Scaffold from resizing when the keyboard opens.
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        // Wrap the entire content in a Container with fixed height.
+        child: Container(
+          height: screenHeight,
+          // Use a Stack so that background elements and the form can overlap.
           child: Stack(
             children: [
               const BackgroundWidget(),
               const BackButtonWidget(),
               const BushWidget(),
               const LogoTitleWidget(),
-              RegistrationFormWidget(),
-              const FlowerWidget(), // FlowerWidget wrapped in IgnorePointer below.
+              // Position the registration form 35% from the top.
+              Positioned(
+                top: screenHeight * 0.35,
+                left: 0,
+                right: 0,
+                // Wrap the form in a SingleChildScrollView to allow scrolling
+                // when the keyboard is open.
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: RegistrationFormWidget(),
+                ),
+              ),
+              const FlowerWidget(),
             ],
           ),
         ),
@@ -165,108 +177,114 @@ class RegistrationFormWidget extends StatelessWidget {
     final double textFieldWidth = screenWidth * 0.85;
     final double buttonHeight = screenHeight * 0.06;
 
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(verticalSpace),
-      color: Colors.transparent,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RegisterTextField(
-              controller: controller.nameController,
-              hint: 'Name',
-            ),
-            SizedBox(height: verticalSpace),
-            RegisterTextField(
-              controller: controller.emailController,
-              hint: 'Email',
-            ),
-            SizedBox(height: verticalSpace),
-            RegisterTextField(
-              controller: controller.passwordController,
-              hint: 'Password',
-              obscureText: true,
-            ),
-            SizedBox(height: verticalSpace),
-            RegisterTextField(
-              controller: controller.confirmPasswordController,
-              hint: 'Confirm Password',
-              obscureText: true,
-            ),
-            SizedBox(height: verticalSpace),
-            RegisterTextField(
-              controller: controller.mobileController,
-              hint: 'Mobile',
-            ),
-            SizedBox(height: verticalSpace * 1.2),
-            SizedBox(
-              width: textFieldWidth,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: buttonHeight,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          // Call the email registration method.
-                          await controller.sendOtp();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF0D522C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          'Register with Email',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: SizedBox(
-                      height: buttonHeight,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          // Call the phone registration method.
-                          await controller.sendPhoneOtp();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF0D522C),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          'Register with Phone',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return Positioned(
+      top: screenHeight * 0.35,
+      left: screenWidth * 0.05,
+      right: screenWidth * 0.05,
+      child: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(verticalSpace),
+        color: Colors.transparent,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RegisterTextField(
+                controller: controller.nameController,
+                hint: 'Name',
               ),
-            ),
-          ],
+              SizedBox(height: verticalSpace),
+              RegisterTextField(
+                controller: controller.emailController,
+                hint: 'Email',
+              ),
+              SizedBox(height: verticalSpace),
+              RegisterTextField(
+                controller: controller.passwordController,
+                hint: 'Password',
+                obscureText: true,
+              ),
+              SizedBox(height: verticalSpace),
+              RegisterTextField(
+                controller: controller.confirmPasswordController,
+                hint: 'Confirm Password',
+                obscureText: true,
+              ),
+              SizedBox(height: verticalSpace),
+              RegisterTextField(
+                controller: controller.mobileController,
+                hint: 'Mobile',
+              ),
+              SizedBox(height: verticalSpace * 1.2),
+              SizedBox(
+                width: textFieldWidth,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: buttonHeight,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            // Call the email registration method.
+                            await controller.sendOtp();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF0D522C),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Register with Email',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: SizedBox(
+                        height: buttonHeight,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            // Call the phone registration method.
+                            await controller.sendPhoneOtp();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF0D522C),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Text(
+                            'Register with Phone',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
 
 /// A reusable text field for the registration form.
 class RegisterTextField extends StatefulWidget {

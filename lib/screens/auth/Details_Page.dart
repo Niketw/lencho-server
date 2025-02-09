@@ -8,15 +8,14 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // Optionally set resizeToAvoidBottomInset if needed.
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: Stack(
-        children: const [
-          BackgroundWidget(),
-          BackButtonWidget(),
-          BushWidget(),
-          LogoTitleWidget(),
+        children: [
+          const BackgroundWidget(),
+          const BushWidget(),
+          const LogoTitleWidget(),
           AddressFormWidget(),
-          FlowerWidget(),
+          const FlowerWidget(),
         ],
       ),
     );
