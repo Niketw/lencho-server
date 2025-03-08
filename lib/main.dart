@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'controllers/home/logout_controller.dart';
 import 'widgets/auth_wrapper.dart';
+// kommit
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
