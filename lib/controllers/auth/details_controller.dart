@@ -2,13 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart'; // Import Hive package
 import 'package:lencho/models/UserDetails.dart';
-import 'package:lencho/screens/home/home_page.dart'; // Import your HomePage
+import 'package:lencho/screens/home/home_page.dart';
 
 class DetailsController extends GetxController {
   static DetailsController get instance => Get.find();
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  // Hive box for session data.
+  late Box sessionBox;
+
+  @override
+  void onInit() {
+    super.onInit();
+    initHive();
+  }
+
+  Future<void> initHive() async {
+    // Open the Hive box for session management.
+    sessionBox = await Hive.openBox('sessionBox');
+  }
 
   /// Creates (or updates) a user document in Firestore using the user's UID.
   Future<void> createUser(UserDetails user) async {
@@ -24,7 +39,7 @@ class DetailsController extends GetxController {
   final TextEditingController stateController = TextEditingController();
   final TextEditingController postalZipController = TextEditingController();
 
-  /// Submits the user details (address) to Firestore.
+  /// Submits the user details (address) to Firestore and creates a session.
   Future<void> submitDetails() async {
     final String streetAddress = streetAddressController.text.trim();
     final String city = cityController.text.trim();
@@ -55,12 +70,14 @@ class DetailsController extends GetxController {
       city: city,
       state: state,
       postalZip: postalZip,
-      updatedAt: DateTime.now(), // You can also let Firestore set the timestamp if preferred.
+      updatedAt: DateTime.now(),
     );
 
     // Save the details to Firestore.
     try {
       await createUser(userDetails);
+      // Create (or update) session details in Hive.
+      sessionBox.put('detailsSubmitted', true);
       Get.snackbar('Success', 'Your details have been updated.');
       // Redirect to HomePage after successful submission.
       Get.offAll(() => HomePage());
@@ -71,8 +88,10 @@ class DetailsController extends GetxController {
     }
   }
 
-  /// Redirects to HomePage without submitting details.
+  /// Redirects to HomePage without submitting details, while still creating a session.
   void doThisLater() {
+    // Optionally store a flag that indicates the user skipped submitting details.
+    sessionBox.put('detailsSubmitted', false);
     Get.offAll(() => HomePage());
   }
 
@@ -82,6 +101,7 @@ class DetailsController extends GetxController {
     cityController.dispose();
     stateController.dispose();
     postalZipController.dispose();
+    sessionBox.close();
     super.onClose();
   }
 }

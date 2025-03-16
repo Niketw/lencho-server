@@ -47,6 +47,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx
 
 # Firebase configuration files
 .env
@@ -74,3 +75,7 @@ ios/Flutter/Generated *.xcconfig
 *.iml
 .idea/
 .vscode/
+
+
+
+

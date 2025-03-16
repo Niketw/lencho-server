@@ -1,19 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lencho/screens/auth/Email_verification_page.dart'; // Your email verification screen
-import 'package:lencho/screens/home/home_page.dart'; // Your home page
+import 'package:hive/hive.dart';
+import 'package:lencho/screens/auth/Email_verification_page.dart';
+import 'package:lencho/screens/home/home_page.dart';
 
 class LoginController extends GetxController {
   // TextEditingControllers for the login form fields.
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Dispose controllers when the controller is closed.
+  // Hive box for session data.
+  late Box sessionBox;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Initialize Hive box for session.
+    initHive();
+  }
+
+  Future<void> initHive() async {
+    sessionBox = await Hive.openBox('sessionBox');
+  }
+
+  // Dispose controllers and close the Hive box when the controller is closed.
   @override
   void onClose() {
     emailController.dispose();
     passwordController.dispose();
+    sessionBox.close();
     super.onClose();
   }
 
@@ -36,6 +52,10 @@ class LoginController extends GetxController {
     
       if (user != null) {
         if (user.emailVerified) {
+          // Save session details in Hive
+          sessionBox.put('loggedIn', true);
+          sessionBox.put('userEmail', user.email);
+          
           print("Email verified. Navigating to HomePage.");
           Get.snackbar('Success', 'Logged in successfully.');
           Get.offAll(() => HomePage());
@@ -53,5 +73,4 @@ class LoginController extends GetxController {
       Get.snackbar('Error', e.toString());
     }
   }
-
 }

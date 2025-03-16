@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lencho/widgets/home/header_widgets.dart';
 import 'package:lencho/widgets/home/content_widgets.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lencho/screens/chat/chat_list_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,7 +10,14 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email ?? "Guest";
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Hello $email"),
+      ),
       body: Column(
         children: const [
           HomeHeader(),
