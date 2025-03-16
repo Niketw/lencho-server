@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lencho/widgets/home/section_widgets.dart';
+import 'package:get/get.dart';
+import 'package:lencho/widgets/news/agri_news_widgets.dart';
+import 'package:lencho/controllers/news/agri_news_controller.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({Key? key}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
+    // Initialize the AgricultureNewsController if it hasn't been registered yet.
+    Get.put<AgricultureNewsController>(AgricultureNewsController());
+    
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -77,19 +83,17 @@ class HomeContent extends StatelessWidget {
               ],
             ),
             
-            // News Section
-            ScrollableSection(
-              title: 'News',
-              items: [
-                SectionItem(
-                  title: 'Market Updates',
-                  onTap: () => Navigator.pushNamed(context, '/news/market'),
-                ),
-                SectionItem(
-                  title: 'Weather Forecast',
-                  onTap: () => Navigator.pushNamed(context, '/news/weather'),
-                ),
-              ],
+            // Agriculture News Section (replacing the previous static News Section)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Agriculture News',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+            Container(
+              height: 400, // Adjust this height based on your UI design.
+              child: const AgricultureNewsWidget(),
             ),
           ],
         ),
