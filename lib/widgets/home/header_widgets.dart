@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lencho/controllers/home/logout_controller.dart';
 import 'package:lencho/widgets/BushCloudRotated.dart';
 

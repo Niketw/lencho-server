@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lencho/widgets/home/section_widgets.dart';
-import 'package:get/get.dart';
 import 'package:lencho/widgets/campaign/campaign_widget.dart';
 import 'package:lencho/widgets/news/agri_news_widgets.dart';
 
