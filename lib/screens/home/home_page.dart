@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:lencho/widgets/home/header_widgets.dart';
-import 'package:lencho/widgets/home/content_widgets.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lencho/screens/chat/chat_list_page.dart';
+import 'package:lencho/widgets/campaign/campaign_widget.dart'; // This widget shows campaigns.
+import 'package:lencho/widgets/home/header_widgets.dart';
+import 'package:lencho/widgets/home/content_widgets.dart';
+import 'package:lencho/controllers/home/authUser_controller.dart';
 
+/// HomePage displays header, content, and conditionally an "Add" button for authorized users.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
-
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email ?? "Guest";
-
+    
+    // Initialize the AuthUserController.
+    final AuthUserController authController = Get.put(AuthUserController());
+    
     return Scaffold(
       appBar: AppBar(
         title: Text("Hello $email"),
@@ -24,33 +29,50 @@ class HomePage extends StatelessWidget {
           HomeContent(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
+      bottomNavigationBar: Obx(() {
+        // Build the bottom navigation items based on authorization.
+        bool isAuth = authController.isAuthorized.value;
+        List<BottomNavigationBarItem> items = [
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
+          if (isAuth)
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.add_box),
+              label: 'Add',
+            ),
+          const BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
           ),
-        ],
-        onTap: (index) {
-          if (index == 3) {
-            // Navigate to chat list page when chat icon is tapped
-            Get.to(() => const ChatListPage());
-          }
-        },
-        type: BottomNavigationBarType.fixed, // Required for 4+ items
-      ),
+        ];
+        
+        return BottomNavigationBar(
+          items: items,
+          onTap: (index) {
+            if (isAuth) {
+              // When authorized: indices: 0:Home, 1:Add, 2:Search, 3:Chat.
+              if (index == 1) {
+                // Navigate to campaign posting.
+                Get.to(() => CampaignsSection());
+              } else if (index == 3) {
+                Get.to(() => const ChatListPage());
+              }
+            } else {
+              // When not authorized: indices: 0:Home, 1:Search, 2:Chat.
+              if (index == 2) {
+                Get.to(() => const ChatListPage());
+              }
+            }
+          },
+          type: BottomNavigationBarType.fixed,
+        );
+      }),
     );
   }
 }
