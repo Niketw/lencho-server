@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Campaign {
   final String id;
   final String title;
@@ -15,25 +17,16 @@ class Campaign {
     required this.createdAt,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'organisation': organisation,
-      'location': location,
-      'details': details,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-    };
-  }
-
-  factory Campaign.fromMap(Map<String, dynamic> map, String documentId) {
+  factory Campaign.fromMap(Map<String, dynamic> data, String documentId) {
     return Campaign(
       id: documentId,
-      title: map['title'] ?? '',
-      organisation: map['organisation'] ?? '',
-      location: map['location'] ?? '',
-      details: map['details'] ?? '',
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
+      title: data['title'] ?? '',
+      organisation: data['organisation'] ?? '',
+      location: data['location'] ?? '',
+      details: data['details'] ?? '',
+      // Convert Firestore Timestamp to DateTime.
+      createdAt: data['createdAt'] is Timestamp
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }

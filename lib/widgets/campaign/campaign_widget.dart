@@ -16,7 +16,9 @@ class CampaignsSection extends StatelessWidget {
       stream: controller.streamCampaigns(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const Center(child: Text('Error loading campaigns.'));
+          return Center(
+            child: Text('Error loading campaigns: ${snapshot.error}'),
+          );
         }
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());

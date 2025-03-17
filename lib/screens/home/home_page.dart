@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lencho/screens/chat/chat_list_page.dart';
-import 'package:lencho/widgets/campaign/campaign_widget.dart'; // This widget shows campaigns.
+import 'package:lencho/widgets/campaign/posting_widget.dart'; // This widget shows campaigns.
 import 'package:lencho/widgets/home/header_widgets.dart';
 import 'package:lencho/widgets/home/content_widgets.dart';
 import 'package:lencho/controllers/home/authUser_controller.dart';
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
               // When authorized: indices: 0:Home, 1:Add, 2:Search, 3:Chat.
               if (index == 1) {
                 // Navigate to campaign posting.
-                Get.to(() => CampaignsSection());
+                Get.to(() => CampaignPostingWidget());
               } else if (index == 3) {
                 Get.to(() => const ChatListPage());
               }

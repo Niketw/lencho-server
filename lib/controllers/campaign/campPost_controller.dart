@@ -17,6 +17,7 @@ class CampaignController extends GetxController {
       'organisation': organisation,
       'location': location,
       'details': details,
+      // Use serverTimestamp so the server sets the time.
       'createdAt': FieldValue.serverTimestamp(),
     };
 
@@ -30,12 +31,21 @@ class CampaignController extends GetxController {
 
   /// Streams the list of campaigns ordered by the most recent.
   Stream<List<Campaign>> streamCampaigns() {
+    print("Listening to campaigns stream...");
     return _db
         .collection('campaigns')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Campaign.fromMap(doc.data() as Map<String, dynamic>, doc.id))
-            .toList());
+        .map((snapshot) {
+          print("Snapshot has ${snapshot.docs.length} campaign documents.");
+          return snapshot.docs.map((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            if (data['createdAt'] == null) {
+              data['createdAt'] = Timestamp.now();
+            }
+            return Campaign.fromMap(data, doc.id);
+          }).toList();
+        });
   }
+
 }
