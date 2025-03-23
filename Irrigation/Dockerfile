@@ -17,7 +17,7 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . /app
 
 # Expose the port the app runs on.
-EXPOSE 8080
+EXPOSE 7860
 
 # Define the command to run your app.
 CMD ["python", "app.py"]

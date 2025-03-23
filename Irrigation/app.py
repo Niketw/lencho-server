@@ -20,20 +20,24 @@ def home():
             }
             # Call the ML model function
             prediction = predict_water_requirement(data)
+            # Convert prediction to a native Python type if necessary
+            prediction = float(prediction)
         except Exception as e:
             error = str(e)
     return render_template('index.html', prediction=prediction, error=error)
 
-@app.route('/predict_irrigation', methods=['POST'])
+@app.route('/predict-irrigation', methods=['POST'])
 def predict_irrigation():
     try:
         # Expect JSON input containing the required keys
         data = request.get_json(force=True)
         prediction = predict_water_requirement(data)
+        # Convert prediction to native Python type (e.g., float) for JSON serialization
+        prediction = float(prediction)
         return jsonify({"predicted_water_requirement": prediction})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 if __name__ == '__main__':
-    # Run the Flask app on port 8080
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    # Run the Flask app on port 7860 (for Hugging Face Spaces)
+    app.run(host='0.0.0.0', port=7860, debug=True)
