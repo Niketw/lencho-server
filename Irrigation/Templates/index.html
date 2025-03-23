@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Irrigation Water Requirement Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .message {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Irrigation Water Requirement Prediction</h1>
+    <form method="POST">
+        <label for="crop_type">CROP TYPE:</label>
+        <input type="text" id="crop_type" name="crop_type" required>
+
+        <label for="soil_type">SOIL TYPE:</label>
+        <input type="text" id="soil_type" name="soil_type" required>
+
+        <label for="region">REGION:</label>
+        <input type="text" id="region" name="region" required>
+
+        <label for="temperature">TEMPERATURE:</label>
+        <input type="text" id="temperature" name="temperature" required>
+
+        <label for="weather_condition">WEATHER CONDITION:</label>
+        <input type="text" id="weather_condition" name="weather_condition" required>
+
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction %}
+    <div class="message">
+        <strong>Predicted Water Requirement:</strong> {{ prediction }}
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="message error">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+</body>
+</html>
