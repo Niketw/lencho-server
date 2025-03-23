@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mango Disease Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .message {
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            display: inline-block;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mango Disease Classification</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="image">Upload an Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <input type="submit" value="Classify">
+    </form>
+
+    {% if prediction %}
+    <div class="message">
+        <strong>Prediction:</strong> {{ prediction }}
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="message error">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+</body>
+</html>
