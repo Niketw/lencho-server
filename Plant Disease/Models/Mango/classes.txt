@@ -1,0 +1,1 @@
+'Anthracnose', 'Bacterial Canker', 'Cutting Weevil', 'Die Black', 'Gall Midge', 'Healthy', 'Powdery Mildew', 'Sooty Mould'
