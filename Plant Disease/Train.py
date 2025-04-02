@@ -14,7 +14,7 @@ import datetime
 # -----------------------------
 # Configuration
 # -----------------------------
-DATA_DIR = "Datasets/Mango"  # Base directory with class subfolders
+DATA_DIR = "Datasets/Mango/train"  # Base directory with class subfolders
 IMG_SIZE = (224, 224)        # MobileNetV2 standard input size
 BATCH_SIZE = 32
 EPOCHS = 30
@@ -340,6 +340,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# mobilenet v2 + cbam + dense(256) --- 0.9987
-# mobilenet v2 + cbam + dense(128) --- 1
-# mobilenet v2 + cbam + dense(32) --- 1
