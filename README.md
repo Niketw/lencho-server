@@ -22,7 +22,7 @@ Lencho Server provides the AI-powered backend services for the Lencho farming ap
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Python 3.9+
+- Python 3.11.x
 - pip or poetry
 
 ### Setup
@@ -45,22 +45,25 @@ The server should start at: http://localhost:5000
 
 ## 🧠 Models Used
 
-- Disease Detection: Deep learning model (CNN or MobileNet)
-- Irrigation Planner: Rule-based or regression model
+- Disease Detection: Convolutional Neural Network built on MobileNet V2
+- Irrigation Planner: Regression type model
 
 ---
 
 ## 🛠 Tech Stack
-
+Python:
 - Flask (Python)
 - TensorFlow
-
+- Keras
+- Numpy
+- Pandas
 ---
 
 ## 📦 Deployment
 
 Can be deployed on:  
-- Google Cloud  
+- Google Cloud
+- HuggingFace
 - Locally via Docker
 
 ---
