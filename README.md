@@ -54,7 +54,6 @@ The server should start at: http://localhost:5000
 
 - Flask (Python)
 - TensorFlow
-- RESTful API (JSON I/O)
 
 ---
 
@@ -62,15 +61,13 @@ The server should start at: http://localhost:5000
 
 Can be deployed on:  
 - Google Cloud  
-- AWS  
-- Heroku  
 - Locally via Docker
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
