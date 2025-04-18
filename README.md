@@ -14,9 +14,6 @@ Lencho Server provides the AI-powered backend services for the Lencho farming ap
 - 💧 Irrigation Planner API  
   Generate optimized irrigation schedules based on weather and crop data.
 
-- 🧩 Model Management  
-  Easily update or replace machine learning models.
-
 ---
 
 ## 🚀 Getting Started
@@ -39,7 +36,7 @@ Lencho Server provides the AI-powered backend services for the Lencho farming ap
    python app.py
 ```
 
-The server should start at: http://localhost:5000
+The server should start at: http://localhost:7860
 
 ---
 
